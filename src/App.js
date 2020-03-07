@@ -39,7 +39,10 @@ class App extends Component {
     gameManager = status => {
         switch(status) {
             case 'start-deal': return this.setInitialCards();
-            case 'initial-cards-set': return this.stayOrHit();
+            case 'initial-cards-set':
+            case 'computer-done':
+            case 'player-done': return this.turnPicker();
+            case 'computer-hit': return this.hit('computer');
             default: return null;
         }
     }
@@ -49,7 +52,6 @@ class App extends Component {
 
         state.deal.deck = getDeck();
         state.status = 'start-deal';
-        state.message = messages.gameStart;
 
         this.setState(state);
     }
@@ -79,31 +81,44 @@ class App extends Component {
             status: 'initial-cards-set'
         });
     }
-    // This starts the stay-or-hit process and branches off based on who's turn it is...
-    stayOrHit = () => {
+    // This determines who's turn it is and what action to take
+    turnPicker = () => {
         if(this.state.deal.computerStay && this.state.deal.playerStay) {
             this.computeVictor();
         } else {
-            if(this.state.turn === 'Computer') this.computerTurn();
-            else alert('Your turn...');
+            if(this.state.turn === 'Computer' && !this.state.deal.computerStay && !this.busted('computer') && !this.atFiveCards('computer')) this.computerTurn();
+            else {
+                if(!this.busted('player') && !this.atFiveCards('player')) this.setState({ turn: 'Player', status: 'computer-done' });
+                else {
+                    let state = {...this.state};
+                    state.status = 'player-done';
+                    state.turn = 'Computer';
+                    state.deal.playerStay = true;
+
+                    this.setState(state);
+                }
+            }
         }
     }
     // This handles the computer's turn...
     computerTurn = () => {
-        let decision = this.doComputerLogic();
-        let state = {...this.state};
-
-        state.turn = 'Player';
-
-        if(decision) {
-            state.message = messages.hit;
-            state.status = 'computer-hit';
-        } else {
-            state.message = messages.stay;
-            state.status = 'computer-stay';
-        }
-
-        this.setState(state);
+        setTimeout(() => {
+            let decision = this.doComputerLogic();
+            let state = {...this.state};
+    
+            state.turn = 'Player';
+    
+            if(decision) {
+                state.message = messages.hit;
+                state.status = 'computer-hit';
+            } else {
+                state.message = messages.stay;
+                state.status = 'computer-done';
+                state.deal.computerStay = true;
+            }
+    
+            this.setState(state);
+        }, 5000);
     }
     // This is the computer's logic...
     doComputerLogic = () => {
@@ -162,7 +177,62 @@ class App extends Component {
     }
     // This will determine who won the deal...
     computeVictor = () => {
+    }
+    hit = who => {
+        let state = {...this.state};
+        let newCard = this.getCard();
 
+        if(who === 'computer') {
+            state.status = 'computer-done';
+            state.turn = 'Player';
+            state.deal.computerCards.push(newCard);
+        } else {
+            state.status = 'player-done';
+            state.turn = 'Computer';
+            state.deal.playerCards.push(newCard);
+            state.message = null;
+        }
+
+        this.setState(state);
+    }
+    stay = () => {
+        let state = {...this.state};
+
+        state.deal.playerStay = true;
+        state.status = 'player-done';
+        state.turn = 'Computer';
+        state.message = null;
+
+        this.setState(state);
+    }
+    getCard = () => {
+        return this.state.deal.deck.pop();
+    }
+    busted = who => {
+        let value = 0;
+        let cards;
+        if(who === 'computer') cards = this.state.deal.computerCards;
+        else cards = this.state.deal.playerCards;
+
+        for(let i = 0; i < cards.length; i++) {
+            if(cards[i].set === 'Ace') {
+                if(value + 11 > 21) value += 1;
+                else value += 11;
+            } else {
+                value += cards[i].value;
+            }
+        }
+
+        if(value > 21) return true;
+        else return false;
+    }
+    atFiveCards = who => {
+        let cards;
+        if(who === 'computer') cards = this.state.deal.computerCards;
+        else cards = this.state.deal.playerCards;
+
+        if(cards.length >= 5) return true;
+        else return false;
     }
     render() {
         return(
@@ -170,7 +240,7 @@ class App extends Component {
             <div className='Table'>
                 <PlayArea playerType='Computer' cards={this.state.deal.computerCards} message={this.state.message} />
                 <Stats stats={this.state.stats} startDeal={this.startDeal} />
-                <PlayArea playerType='Player' cards={this.state.deal.playerCards} turn={this.state.turn} />
+                <PlayArea playerType='Player' cards={this.state.deal.playerCards} turn={this.state.turn} hit={this.hit} stay={this.stay} />
             </div>
             </div>
         );

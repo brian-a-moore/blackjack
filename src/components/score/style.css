@@ -5,11 +5,7 @@
     padding: 10px;
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0 3px 5px rgba(0,0,0,0.5);
 }
-
-.Score.Computer { background: #78909C;}
-.Score.Player { background: #1976D2;}
 
 .Score label {
     background: #00796B;

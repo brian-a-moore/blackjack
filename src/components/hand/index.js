@@ -7,8 +7,8 @@ class Hand extends Component {
         if(this.props.playerType === 'Player') {
             return(
                 <div>
-                    <button disabled={this.props.turn === 'Computer' ? true : false } className='stay'> Stay </button>
-                    <button disabled={this.props.turn === 'Computer' ? true : false } className='hit'> Hit </button>
+                    <button disabled={this.props.turn === 'Computer' ? true : false } onClick={this.props.stay}className='stay'> Stay </button>
+                    <button disabled={this.props.turn === 'Computer' ? true : false } onClick={() => this.props.hit('player')} className='hit'> Hit </button>
                 </div>
             );
         } else {
