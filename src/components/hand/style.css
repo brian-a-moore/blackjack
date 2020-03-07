@@ -1,0 +1,112 @@
+.Hand {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    border-radius: 5px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.Hand .stack {
+    background: #546E7A;
+    float: left;
+    width: 100%;
+    height: calc(100% - 50px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 10px 10px 80px;
+}
+
+.Hand .stack span {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin-left: -70px;
+    opacity: 0.4;
+    font-weight: bold;
+}
+
+.Hand .stack .card-holder {
+    float: left;
+    width: 117px;
+    margin-left: -70px;
+    height: 180px;
+}
+
+.Hand .actions {
+    float: left;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+}
+
+.Hand.Computer .actions {
+    background: #78909C;
+}
+
+.Hand.Player .actions {
+    background: #1976D2;
+}
+
+.Hand .actions button.stay {
+    background: #B0BEC5;
+    float: left;
+    color: #37474F;
+}
+
+.Hand .actions button.stay:hover {
+    background: #90A4AE;
+}
+
+.Hand .actions button.hit {
+    background: #4CAF50;
+    float: right;
+    color: white;
+}
+
+.Hand .actions button.hit:hover {
+    background: #388E3C;
+}
+
+.Hand .actions button {
+    height: 30px;
+    margin: 0;
+    padding: 0 30px;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.Hand .actions button:disabled, .Hand .actions button:disabled:hover, .Hand .actions button:disabled:active {
+    background: #CFD8DC;
+    box-shadow: none;
+    color: #90A4AE;
+    transform: scale(1);
+    cursor: default;
+}
+
+.Hand .actions button:hover {
+    box-shadow: 0 6px 10px rgba(0,0,0,0.3);  
+}
+
+.Hand .actions button:active {
+    transform: scale(0.9);
+}
+
+.Hand .computer-message {
+    float: left;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.2);
+}
