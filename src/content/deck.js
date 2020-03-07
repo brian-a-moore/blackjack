@@ -41,10 +41,13 @@ const shuffleDeck = deck => {
 }
 
 // StartUp
-const getDeck = () => {
+export const getDeck = () => {
     const deck = generateDeck();
     return shuffleDeck(deck);
 }
 
-// Test
-console.log(getDeck());
+// Get Card
+export const getCard = deck => {
+    let randomIndex = Math.floor(Math.random() * deck.length);
+    return deck[randomIndex];
+}

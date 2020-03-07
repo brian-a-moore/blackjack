@@ -3,15 +3,12 @@ import Card from '../card';
 import './style.css';
 
 class Hand extends Component {
-    componentDidMount() {
-        console.log({ props: this.props });
-    }
     showOptions = () => {
         if(this.props.playerType === 'Player') {
             return(
                 <div>
-                    <button className='stay'> Stay </button>
-                    <button className='hit'> Hit </button>
+                    <button disabled={this.props.turn === 'Computer' ? true : false } className='stay'> Stay </button>
+                    <button disabled={this.props.turn === 'Computer' ? true : false } className='hit'> Hit </button>
                 </div>
             );
         } else {
@@ -20,14 +17,13 @@ class Hand extends Component {
     }
     showCards = () => {
         let cards = this.props.cards;
-        if(cards) {
-            if(cards.length > 0) {
-                return cards.map((card, i) => (
-                    <div className='card-holder' style={{ zIndex: i + 1 }}>
-                        <Card playerType={this.props.playerType} card={card} key={card.id} index={i} />
-                    </div>
-                ));
-            }
+        
+        if(cards.length > 0) {
+            return cards.map((card, i) => (
+                <div className='card-holder' key={card.id} style={{ zIndex: i + 1 }}>
+                    <Card playerType={this.props.playerType} card={card} key={card.id} index={i} />
+                </div>
+            ));
         } else {
             return <span className='placeholder'> No Cards </span>;
         }

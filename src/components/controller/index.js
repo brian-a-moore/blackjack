@@ -5,7 +5,7 @@ class Controller extends Component {
     render() {
         return(
             <div className='Controller'>
-
+                <button onClick={this.props.startDeal}> Start Game </button>
             </div>
         )
     }
